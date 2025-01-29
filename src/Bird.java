@@ -12,7 +12,7 @@ public class Bird{
 	int height = 24; 
 	
 	public void draw(Graphics g, JPanel panel) {
-		g.drawImage(new ImageIcon("flappybird.png").getImage(), this.XCoordinate, this.YCoordinate, this.width, this.height, panel);
+		g.drawImage(new ImageIcon("flappybird.png").getImage(), XCoordinate, YCoordinate, width, height, panel);
     }
 	
 	public void move(int birdSpeed) {

@@ -16,7 +16,7 @@ public class MainBoard extends JPanel implements KeyListener, ActionListener{
 	ArrayList<Pipes> pipes = new ArrayList<>(); // Around 4 pipes can fit the screen
 	int birdSpeed = 10;
 	int pipeSpeed = -5;
-	 
+	Boolean collision = false;
     public MainBoard() {
     	 this.setPreferredSize(new Dimension(400, 640));
     	 this.setFocusable(true); 
@@ -45,6 +45,7 @@ public class MainBoard extends JPanel implements KeyListener, ActionListener{
             for (Pipes pipe : pipes) {
                 pipe.draw(g, this);
             }
+
     }
 
 
@@ -70,11 +71,21 @@ public class MainBoard extends JPanel implements KeyListener, ActionListener{
             if (pipe.XCoordinate + pipe.width < 0) {
                 pipe.reset(740); // Reset pipe position to the right side
             }
+            
+            if(pipeNextToBird(pipe)) {collision = true; break;}
         }
-        
-		repaint();
+
+        if(!collision) {
+    		repaint();
+        }
 	}
     
+	public Boolean pipeNextToBird(Pipes pipe) { 
+		Boolean horizentalCollision = (bird.XCoordinate + bird.width >= pipe.XCoordinate && pipe.XCoordinate+pipe.width > bird.XCoordinate);
+		Boolean verticalCollision = (pipe.YPositionBottom  < bird.YCoordinate+bird.height || pipe.randomYPositionTop + pipe.height > bird.YCoordinate);
+		Boolean fellDown = bird.YCoordinate + bird.height >= 640;
+		return (horizentalCollision && verticalCollision) || fellDown ;
+	}
 	@Override
 	public void keyTyped(KeyEvent e) {}
 
