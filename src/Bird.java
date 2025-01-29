@@ -18,6 +18,8 @@ public class Bird{
 	public void move(int birdSpeed) {
 		this.YCoordinate -= birdSpeed; //moves to the right
     }
+	
+	
 }
 
 	
