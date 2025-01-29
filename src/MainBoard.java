@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -11,26 +13,22 @@ import javax.swing.Timer;
 public class MainBoard extends JPanel implements KeyListener, ActionListener{
 	
 	Bird bird = new Bird();
-	Pipes pipes = new Pipes();
+	ArrayList<Pipes> pipes = new ArrayList<>(); // Around 4 pipes can fit the screen
 	int birdSpeed = 10;
 	int pipeSpeed = -5;
+	 
     public MainBoard() {
     	 this.setPreferredSize(new Dimension(400, 640));
     	 this.setFocusable(true); 
          this.requestFocusInWindow(); 
     	 this.addKeyListener(this);
-    	 new Timer(1000/60, new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				birdSpeed -= 1;			//-1 acts as gravity, making the speed lower by each from
-				bird.YCoordinate -= birdSpeed;  
-				pipes.XCoordinate += pipeSpeed;  //makes the pipes move to the left
-				repaint();
-			}
-    		 
-    	 }).start();	//60fps
- 
+    	 
+    	 pipes.add(new Pipes(400));
+         pipes.add(new Pipes(600));
+         pipes.add(new Pipes(800));
+         pipes.add(new Pipes(1000));
+         
+    	 new Timer(1000/60, this).start();	//60fps 
     } 
          
 
@@ -39,12 +37,14 @@ public class MainBoard extends JPanel implements KeyListener, ActionListener{
             super.paintComponent(g);
             //background
             g.drawImage(new ImageIcon("Background.png").getImage(), 0, 0, this.getWidth(), this.getHeight(), this);
+            
             //bird
-            g.drawImage(new ImageIcon("flappybird.png").getImage(), bird.XCoordinate, bird.YCoordinate, bird.width, bird.heihgt, this);
-            //top pipe
-            g.drawImage(new ImageIcon("toppipe.png").getImage(), pipes.XCoordinate, pipes.randomYPositionTop, pipes.width, pipes.height, this);
-            //bottom pipe
-            g.drawImage(new ImageIcon("bottompipe.png").getImage(), pipes.XCoordinate, pipes.YPositionBottom, pipes.width, pipes.height, this);
+            bird.draw(g, this);
+            
+            //pipes
+            for (Pipes pipe : pipes) {
+                pipe.draw(g, this);
+            }
     }
 
 
@@ -52,15 +52,27 @@ public class MainBoard extends JPanel implements KeyListener, ActionListener{
 	public void keyPressed(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 			birdSpeed = 10;		//resets the speed
-			bird.YCoordinate -= birdSpeed;	//makes the bird jump
+			bird.move(birdSpeed);;	//makes the bird jump
 		}
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		birdSpeed -= 1;			//-1 acts as gravity, making the speed lower by each from
+		bird.move(birdSpeed);
+		bird.YCoordinate = Math.max(bird.YCoordinate, 0);	//bird can't get off the frame
 		
-				
+		
+		// Move and reset pipes if they go off-screen
+        for (Pipes pipe : pipes) {
+            pipe.move(pipeSpeed);
+            if (pipe.XCoordinate + pipe.width < 0) {
+                pipe.reset(740); // Reset pipe position to the right side
+            }
+        }
+        
+		repaint();
 	}
     
 	@Override

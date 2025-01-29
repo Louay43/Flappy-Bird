@@ -13,7 +13,7 @@ public class Main {
 		frame.setLocationRelativeTo(null);
 		
 		
-		
+		 
 		frame.add(new MainBoard());
 		
 		frame.setVisible(true);
