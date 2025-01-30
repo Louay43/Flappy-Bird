@@ -1,0 +1,1 @@
+A simple Flappy Bird game implemented in Java using Swing. The game features basic mechanics where the player controls a bird to navigate through obstacles with a scoreboard tracking the player's score.
