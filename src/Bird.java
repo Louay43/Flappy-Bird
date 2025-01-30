@@ -19,6 +19,10 @@ public class Bird{
 		this.YCoordinate -= birdSpeed; //moves to the right
     }
 	
+	public void reset() {
+        YCoordinate = 250;
+    	XCoordinate = 30;
+    }
 	
 }
 
