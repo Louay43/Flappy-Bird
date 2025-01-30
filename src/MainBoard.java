@@ -138,7 +138,7 @@ public class MainBoard extends JPanel implements KeyListener, ActionListener {
         }
         
         else if(e.getKeyCode() == KeyEvent.VK_S && collision) {
-        	//ScoreBoard scoreBoard = new ScoreBoard();
+        	new ScoreBoard(score);
         }
     }
     
